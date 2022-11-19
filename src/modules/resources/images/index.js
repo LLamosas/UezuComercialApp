@@ -1,0 +1,16 @@
+export const bg_splash = require('./bg_splash.png');
+export const bg_login = require('./bg_login.png');
+export const header = require('./header.png');
+export const logo_blue = require('./logo_blue.png');
+export const logo_white = require('./logo_white.png');
+export const logout = require('./logout.png');
+export const back = require('./back.png');
+export const send = require('./send.png');
+export const close = require('./cancel.png');
+export const arrowDown = require('./arrowDown.png');
+export const tecnico = require('./tecnico.png');
+export const calidad = require('./calidad.png');
+export const camera = require('./camera.png');
+export const gallery = require('./gallery.png');
+export const trash = require('./trash.png');
+export const ingeniero = require('./ingeniero.png');
