@@ -303,28 +303,24 @@ class Step2Ingeniero extends Component {
               onPress={() => {
                 const data = this.props.route.params.beforeData;
                 const allData = {...data, ...this.state};
-                // this.props.generatePDFIngeniero({
-                //   ...allData,
-                //   planoProyecto:
-                //     planoProyecto && planoProyecto.base64
-                //       ? planoProyecto.base64
-                //       : null,
-                //   planoAvance:
-                //     planoAvance && planoAvance.base64
-                //       ? planoAvance.base64
-                //       : null,
-                //   token: this.props.token,
-                //   idUser: this.props.user.id,
-                //   callback: idReport => {
-                //     this.props.navigation.navigate('step3Ingeniero', {
-                //       idReport,
-                //       from: 'I',
-                //     });
-                //   },
-                // });
-                this.props.navigation.navigate('step3Ingeniero', {
-                  idReport: '188',
-                  from: 'I',
+                this.props.generatePDFIngeniero({
+                  ...allData,
+                  planoProyecto:
+                    planoProyecto && planoProyecto.base64
+                      ? planoProyecto.base64
+                      : null,
+                  planoAvance:
+                    planoAvance && planoAvance.base64
+                      ? planoAvance.base64
+                      : null,
+                  token: this.props.token,
+                  idUser: this.props.user.id,
+                  callback: idReport => {
+                    this.props.navigation.navigate('step3Ingeniero', {
+                      idReport,
+                      from: 'I',
+                    });
+                  },
                 });
               }}>
               <Text style={styles.textBtn}>Siguiente</Text>
