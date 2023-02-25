@@ -19,7 +19,10 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 // import SelectInput from 'react-native-select-input-ios';
 import DatePicker from 'react-native-date-picker';
 
-import {logOut} from '../../../../../modules/core/User/actions';
+import {
+  logOut,
+  generatePDFCalidad,
+} from '../../../../../modules/core/User/actions';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 //COMPONENTS
 import Header from '../../../../components/Header';
@@ -226,7 +229,27 @@ class Step3Calidad extends Component {
               onPress={() => {
                 const beforeData = this.props.route.params.beforeData;
                 const allData = {...beforeData, ...this.state};
-                console.log('allData', allData);
+                const planoProyecto =
+                  allData.planoProyecto && allData.planoProyecto.base64
+                    ? allData.planoProyecto.base64
+                    : '';
+                const planoAvance =
+                  allData.planoAvance && allData.planoAvance.base64
+                    ? allData.planoProyecto.base64
+                    : '';
+                this.props.generatePDFCalidad({
+                  ...allData,
+                  planoProyecto,
+                  planoAvance,
+                  token: this.props.token,
+                  idUser: this.props.user.id,
+                  callback: idReport => {
+                    this.props.navigation.navigate('step4Calidad', {
+                      idReport,
+                      from: 'C',
+                    });
+                  },
+                });
               }}>
               <Text style={{color: 'white'}}>Siguiente</Text>
             </TouchableOpacity>
@@ -245,4 +268,6 @@ const mapStateProps = state => {
   };
 };
 
-export default connect(mapStateProps, {logOut})(Step3Calidad);
+export default connect(mapStateProps, {logOut, generatePDFCalidad})(
+  Step3Calidad,
+);

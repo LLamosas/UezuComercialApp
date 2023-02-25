@@ -4,15 +4,12 @@ import {SafeAreaView, View} from 'react-native';
 
 import PDFView from 'react-native-view-pdf';
 
-import {sendReport} from '../../../modules/core/User/actions';
+import {sendReportCalidad} from '../../../../../modules/core/User/actions';
 //COMPONENTS
-import Header from '../../components/Header';
-import {base} from '../../../modules/resources/strings';
+import Header from '../../../../components/Header';
+import Loader from '../../../../components/Loader';
+import {base} from '../../../../../modules/resources/strings';
 
-/// COMPONENTS
-import Loader from '../../components/Loader';
-
-var folder = 'Tecnico';
 class Viewer extends Component {
   state = {
     showPassword: false,
@@ -21,6 +18,10 @@ class Viewer extends Component {
   };
 
   componentDidMount() {
+    console.log('this.props.navigation', this.props.navigation);
+  }
+  render() {
+    let folder = 'Tecnico';
     const type = this.props.route.params.from;
     switch (type) {
       case 'T':
@@ -32,9 +33,10 @@ class Viewer extends Component {
       case 'I':
         folder = 'Ingeniero';
         break;
+      default:
+        folder = 'Tecnico';
+        break;
     }
-  }
-  render() {
     const pdfLink = `${base}${folder}/${this.props.route.params.idReport}.pdf`;
     return (
       <SafeAreaView style={{flex: 1}}>
@@ -44,7 +46,7 @@ class Viewer extends Component {
           sendable
           pdfLink={pdfLink}
           sendReport={correo =>
-            this.props.sendReport({
+            this.props.sendReportCalidad({
               token: this.props.token,
               idReport: this.props.route.params.idReport,
               correo,
@@ -79,4 +81,4 @@ const mapStateProps = state => {
     loading,
   };
 };
-export default connect(mapStateProps, {sendReport})(Viewer);
+export default connect(mapStateProps, {sendReportCalidad})(Viewer);

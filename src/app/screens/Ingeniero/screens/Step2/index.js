@@ -8,15 +8,18 @@ import {
   Text,
   Image,
   FlatList,
+  ScrollView,
 } from 'react-native';
 import {
   loginStyles,
   generalStyles,
   userStyles,
 } from '../../../../../modules/resources/styles';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
-import {logOut} from '../../../../../modules/core/User/actions';
+import {
+  logOut,
+  generatePDFIngeniero,
+} from '../../../../../modules/core/User/actions';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 //COMPONENTS
 import Header from '../../../../components/Header';
@@ -139,7 +142,7 @@ class Step2Ingeniero extends Component {
     } = this.state;
     return (
       <SafeAreaView style={styles.mainContainer}>
-        <KeyboardAwareScrollView>
+        <ScrollView>
           <Header backable goBack={() => this.props.navigation.goBack()} />
           <View style={styles.mainContainer}>
             <Title title={'Datos datos adicionales'} />
@@ -300,12 +303,34 @@ class Step2Ingeniero extends Component {
               onPress={() => {
                 const data = this.props.route.params.beforeData;
                 const allData = {...data, ...this.state};
-                console.log('allData', allData);
+                // this.props.generatePDFIngeniero({
+                //   ...allData,
+                //   planoProyecto:
+                //     planoProyecto && planoProyecto.base64
+                //       ? planoProyecto.base64
+                //       : null,
+                //   planoAvance:
+                //     planoAvance && planoAvance.base64
+                //       ? planoAvance.base64
+                //       : null,
+                //   token: this.props.token,
+                //   idUser: this.props.user.id,
+                //   callback: idReport => {
+                //     this.props.navigation.navigate('step3Ingeniero', {
+                //       idReport,
+                //       from: 'I',
+                //     });
+                //   },
+                // });
+                this.props.navigation.navigate('step3Ingeniero', {
+                  idReport: '188',
+                  from: 'I',
+                });
               }}>
               <Text style={styles.textBtn}>Siguiente</Text>
             </TouchableOpacity>
           </View>
-        </KeyboardAwareScrollView>
+        </ScrollView>
       </SafeAreaView>
     );
   }
@@ -319,4 +344,6 @@ const mapStateProps = state => {
   };
 };
 
-export default connect(mapStateProps, {logOut})(Step2Ingeniero);
+export default connect(mapStateProps, {logOut, generatePDFIngeniero})(
+  Step2Ingeniero,
+);

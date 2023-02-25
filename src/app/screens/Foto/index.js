@@ -127,7 +127,7 @@ class Foto extends Component {
               idUser: this.props.user.id,
               codSofya: this.props.codSofya,
               local: this.props.local,
-              idClienteSelect: this.props.idClienteSelect.value,
+              idClienteSelect: this.props.idClienteSelect,
               direccion: this.props.direccion,
               idSupervisorSelect: this.props.idSupervisorSelect.value,
               ubicacion: this.props.ubicacion,
@@ -186,7 +186,7 @@ class Foto extends Component {
               dniCli: this.props.dniCli,
               cargoCli: this.props.cargoCli,
               callback: idReport => {
-                this.props.navigation.navigate('Viewer', {idReport});
+                this.props.navigation.navigate('Viewer', {idReport, from: 'T'});
               },
             });
           }}>
@@ -310,6 +310,7 @@ const mapStateProps = state => {
     cargoCli,
   } = state.user;
 
+  console.log('idClienteSelect', idClienteSelect);
   return {
     user,
     token,

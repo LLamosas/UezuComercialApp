@@ -21,6 +21,7 @@ class Login extends Component {
     showPassword: false,
     user: '',
     clave: '',
+    loader: false,
   };
 
   async requestCameraPermission() {
@@ -77,19 +78,22 @@ class Login extends Component {
               />
               <TouchableOpacity
                 style={loginStyles.button}
-                onPress={() =>
+                onPress={async () => {
+                  this.setState({loader: true});
                   this.props.userLogin({
                     user: this.state.user,
                     password: this.state.clave,
-                    callback: () => {},
-                  })
-                }>
+                    callback: () => {
+                      this.setState({loader: false});
+                    },
+                  });
+                }}>
                 <Text style={{color: 'white'}}>Ingresar</Text>
               </TouchableOpacity>
             </View>
           </View>
         </ImageBackground>
-        {/* <Loader isVisible={this.props.loading} /> */}
+        <Loader isVisible={this.state.loader} />
       </SafeAreaView>
     );
   }

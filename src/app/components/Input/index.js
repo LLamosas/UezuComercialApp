@@ -82,7 +82,7 @@ const Input = ({
         {getInputComponent()}
         {suffix ? <Text style={styles.input__suffix}>{suffix}</Text> : null}
       </View>
-      <Text style={['input__caption__' + type]}>{caption}</Text>
+      <Text style={styles['input__caption__' + type]}>{caption}</Text>
     </View>
   );
 };

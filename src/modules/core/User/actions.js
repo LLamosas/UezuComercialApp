@@ -12,6 +12,10 @@ import {
   sw_data_app,
   sw_save_pdf,
   sw_send_report,
+  sw_save_calidad_pdf,
+  sw_save_ingeniero_pdf,
+  sw_send_reportCalidad,
+  sw_send_reportIngeniero,
 } from '../../services/AuthApi';
 import {isEmpty, showAlert} from '../../resources/util';
 
@@ -39,6 +43,7 @@ export const userLogin = info => {
   return dispatch => {
     if (isEmpty(user) || isEmpty(password)) {
       showAlert({type: 2, msj: 'Usuario o Clave vacios'});
+      callback();
       return false;
     }
 
@@ -63,6 +68,7 @@ export const userLogin = info => {
 
         callback();
       } else {
+        callback();
         showAlert({type: 2, msj: data.data.error});
       }
       dispatch({
@@ -261,14 +267,142 @@ export const getInitialDataApp = info => {
 };
 
 export const sendReport = info => {
-  const {token, idReport, callback} = info;
+  const {token, idReport, correo, callback} = info;
 
   return dispatch => {
     dispatch({
       type: WAITING_DATA,
     });
 
-    sw_send_report({token, idReport})
+    sw_send_report({token, idReport, correo})
+      .then(data => {
+        if (data.status == 200) {
+          dispatch({
+            type: CLEAR_DATA_REPORT,
+          });
+
+          callback();
+        } else {
+          showAlert({type: 2, msj: data.data.error});
+        }
+
+        dispatch({
+          type: STOP_WAITING_DATA,
+        });
+      })
+      .catch(e => {
+        dispatch({
+          type: STOP_WAITING_DATA,
+        });
+      });
+  };
+};
+
+export const generatePDFCalidad = info => {
+  const {callback, token} = info;
+  return dispatch => {
+    dispatch({
+      type: WAITING_DATA,
+    });
+
+    sw_save_calidad_pdf({
+      token,
+      ...info,
+    })
+      .then(data => {
+        if (data.status == 200) {
+          callback(data.data.idReport);
+        } else {
+          console.log('eee', data);
+          showAlert({type: 2, msj: data.data.error});
+        }
+
+        dispatch({
+          type: STOP_WAITING_DATA,
+        });
+      })
+      .catch(e => {
+        console.log('eee', e);
+        dispatch({
+          type: STOP_WAITING_DATA,
+        });
+      });
+  };
+};
+
+export const generatePDFIngeniero = info => {
+  const {callback, token} = info;
+  return dispatch => {
+    dispatch({
+      type: WAITING_DATA,
+    });
+
+    sw_save_ingeniero_pdf({
+      token,
+      ...info,
+    })
+      .then(data => {
+        if (data.status == 200) {
+          callback(data.data.idReport);
+        } else {
+          console.log('eee', data);
+          showAlert({type: 2, msj: data.data.error});
+        }
+
+        dispatch({
+          type: STOP_WAITING_DATA,
+        });
+      })
+      .catch(e => {
+        console.log('eee', e);
+        dispatch({
+          type: STOP_WAITING_DATA,
+        });
+      });
+  };
+};
+
+export const sendReportCalidad = info => {
+  const {token, idReport, correo, callback} = info;
+
+  return dispatch => {
+    dispatch({
+      type: WAITING_DATA,
+    });
+
+    sw_send_reportCalidad({token, idReport, correo})
+      .then(data => {
+        if (data.status == 200) {
+          dispatch({
+            type: CLEAR_DATA_REPORT,
+          });
+
+          callback();
+        } else {
+          showAlert({type: 2, msj: data.data.error});
+        }
+
+        dispatch({
+          type: STOP_WAITING_DATA,
+        });
+      })
+      .catch(e => {
+        dispatch({
+          type: STOP_WAITING_DATA,
+        });
+      });
+  };
+};
+
+export const sendReportIngeniero = info => {
+  const {token, idReport, correo, callback} = info;
+
+  return dispatch => {
+    dispatch({
+      type: WAITING_DATA,
+    });
+
+    sw_send_reportIngeniero({token, idReport, correo})
       .then(data => {
         if (data.status == 200) {
           dispatch({

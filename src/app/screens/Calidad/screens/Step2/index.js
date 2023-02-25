@@ -8,6 +8,7 @@ import {
   Text,
   Image,
   FlatList,
+  ScrollView,
 } from 'react-native';
 import {
   loginStyles,
@@ -99,7 +100,9 @@ class Step2Calidad extends Component {
     launchImageLibrary(imagePickerOptions, imgPickerResponse);
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    console.log('props', this.props.route.params);
+  }
 
   setttingParam(prop, value) {
     this.setState({[prop]: value});
@@ -137,7 +140,7 @@ class Step2Calidad extends Component {
     } = this.state;
     return (
       <SafeAreaView style={styles.mainContainer}>
-        <KeyboardAwareScrollView>
+        <ScrollView>
           <Header backable goBack={() => this.props.navigation.goBack()} />
           <View style={styles.mainContainer}>
             <Title title={'Datos datos adicionales'} />
@@ -295,7 +298,7 @@ class Step2Calidad extends Component {
               <Text style={styles.textBtn}>Siguiente</Text>
             </TouchableOpacity>
           </View>
-        </KeyboardAwareScrollView>
+        </ScrollView>
       </SafeAreaView>
     );
   }

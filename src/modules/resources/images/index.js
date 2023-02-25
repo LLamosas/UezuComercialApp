@@ -14,3 +14,4 @@ export const camera = require('./camera.png');
 export const gallery = require('./gallery.png');
 export const trash = require('./trash.png');
 export const ingeniero = require('./ingeniero.png');
+export const share = require('./share.png');

@@ -20,10 +20,12 @@ import ViewerScreen from '../screens/Viewer';
 import Step1CalidadScreen from '../screens/Calidad/screens/Step1';
 import Step2CalidadScreen from '../screens/Calidad/screens/Step2';
 import Step3CalidadScreen from '../screens/Calidad/screens/Step3';
+import Step4CalidadScreen from '../screens/Calidad/screens/Viewer';
 
 //// INGENIERO
 import Step1IngenieroScreen from '../screens/Ingeniero/screens/Step1';
 import Step2IngenieroScreen from '../screens/Ingeniero/screens/Step2';
+import Step3IngenieroScreen from '../screens/Ingeniero/screens/Viewer';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
@@ -52,6 +54,7 @@ const CalidadStack = () => {
       <Screen name="step1Calidad" component={Step1CalidadScreen} />
       <Screen name="step2Calidad" component={Step2CalidadScreen} />
       <Screen name="step3Calidad" component={Step3CalidadScreen} />
+      <Screen name="step4Calidad" component={Step4CalidadScreen} />
     </Navigator>
   );
 };
@@ -63,6 +66,7 @@ const IngenieroStack = () => {
       screenOptions={{headerShown: false}}>
       <Screen name="step1Ingeniero" component={Step1IngenieroScreen} />
       <Screen name="step2Ingeniero" component={Step2IngenieroScreen} />
+      <Screen name="step3Ingeniero" component={Step3IngenieroScreen} />
     </Navigator>
   );
 };
@@ -139,6 +143,9 @@ function RootNavigator() {
       <Screen name="_splashScreen" component={SplashScreen} />
       <Screen name={'LogIn'} component={LoginScreen} />
       <Screen name={'Usuario'} component={MainTab} />
+      <Screen name={'UsuarioCalidad'} component={CalidadStack} />
+      <Screen name={'UsuarioIngeniero'} component={IngenieroStack} />
+      <Screen name={'UsuarioTecnico'} component={InicioStack} />
     </Navigator>
   );
 }
