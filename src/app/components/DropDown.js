@@ -41,7 +41,7 @@ class Dropdown extends Component {
       <>
         <TouchableOpacity
           style={[userStyles.textInput, {justifyContent: 'center'}]}
-          onPress={() => this.setState({visibleModal: !visibleModal})}>
+          onPress={() => this.setState({visibleModal: true})}>
           <Text style={{justifyContent: 'center', alignItems: 'center'}}>
             {selected !== 0 && selectClient !== null
               ? selectClient.label
@@ -109,7 +109,7 @@ class Dropdown extends Component {
                       borderBottomColor: '#CCC',
                       borderBottomWidth: 0.5,
                     }}>
-                    <Text>{item.label}</Text>
+                    <Text style={{color: 'black'}}>{item.label}</Text>
                   </TouchableOpacity>
                 ))}
               </ScrollView>

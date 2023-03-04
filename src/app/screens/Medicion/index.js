@@ -176,7 +176,7 @@ class Medicion extends Component {
             <TouchableOpacity
               style={loginStyles.button}
               onPress={() => {
-                this.props.navigation.navigate('Foto');
+                this.props.navigation.push('Foto');
 
                 // if (isEmpty(this.props.manoMarca) ||
                 //     isEmpty(this.props.manoModelo) ||

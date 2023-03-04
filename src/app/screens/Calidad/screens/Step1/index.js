@@ -28,7 +28,8 @@ import Input from '../../../../components/Input';
 import ListFilter from '../../../../components/ListFilter';
 import SelectInput from '../../../../components/Select';
 
-import {camera, gallery} from '../../../../../modules/resources/images';
+import {camera, gallery, close} from '../../../../../modules/resources/images';
+import {colors} from '../../../../../modules/resources/color';
 import {styles} from './styles';
 
 const imagePickerOptions = {
@@ -110,7 +111,7 @@ class Step1Calidad extends Component {
       asistenteUC,
       pathCrono,
     } = this.state;
-    console.log('pathCrono', pathCrono);
+
     return (
       <SafeAreaView style={{flex: 1}}>
         <KeyboardAwareScrollView>
@@ -264,10 +265,33 @@ class Step1Calidad extends Component {
                 </TouchableOpacity>
               </View>
             </View>
-            <Image
-              source={{uri: pathCrono}}
-              style={cronograma ? styles.image : null}
-            />
+            {cronograma ? (
+              <View style={styles.image}>
+                <TouchableOpacity
+                  style={{
+                    right: 40,
+                    position: 'absolute',
+                    zIndex: 10,
+                    elevation: 10,
+                  }}
+                  onPress={() => this.setState({cronograma: ''})}>
+                  <Image
+                    source={close}
+                    style={{
+                      width: 16,
+                      height: 16,
+                      resizeMode: 'contain',
+                      tintColor: 'red',
+                    }}
+                  />
+                </TouchableOpacity>
+                <Image
+                  source={{uri: pathCrono}}
+                  style={cronograma ? styles.image : null}
+                />
+              </View>
+            ) : null}
+
             <Text style={generalStyles.textTitle}>Cantidad de hitos</Text>
             <TextInput
               style={userStyles.textInput}
@@ -324,8 +348,7 @@ class Step1Calidad extends Component {
               style={loginStyles.button}
               onPress={() => {
                 const beforeData = this.state;
-                console.log('beforeDssata', beforeData);
-                this.props.navigation.navigate('step2Calidad', {
+                this.props.navigation.push('step2Calidad', {
                   beforeData,
                 });
               }}>

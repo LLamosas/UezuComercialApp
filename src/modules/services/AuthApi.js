@@ -2,17 +2,15 @@ import axios from 'axios';
 import {string_general} from '../resources/strings';
 
 export const sw_login = params => {
-  return axios
-    .post(
-      `${string_general.base_URL}auth/login`,
-      {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      },
-      {params},
-    )
+  return axios({
+    method: 'post',
+    url: `${string_general.base_URL}auth/login`,
+    data: params,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
     .then(res => {
       return res;
     })

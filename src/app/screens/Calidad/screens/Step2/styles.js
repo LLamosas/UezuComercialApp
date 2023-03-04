@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
     height: 200,
     resizeMode: 'contain',
     alignSelf: 'center',
-    marginTop: 10,
+    marginVertical: 10,
   },
   iconsContainer: {
     flexDirection: 'row',

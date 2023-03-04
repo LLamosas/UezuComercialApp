@@ -17,9 +17,7 @@ class Viewer extends Component {
     selectSupervisor: [{key: '0', value: 0, label: 'Seleccione un Supervisor'}],
   };
 
-  componentDidMount() {
-    console.log('this.props.navigation', this.props.navigation);
-  }
+  componentDidMount() {}
   render() {
     let folder = 'Tecnico';
     const type = this.props.route.params.from;
@@ -38,6 +36,7 @@ class Viewer extends Component {
         break;
     }
     const pdfLink = `${base}${folder}/${this.props.route.params.idReport}.pdf`;
+
     return (
       <SafeAreaView style={{flex: 1}}>
         <Header
@@ -50,22 +49,21 @@ class Viewer extends Component {
               token: this.props.token,
               idReport: this.props.route.params.idReport,
               correo,
-              callback: () => {
-                this.props.navigation.navigate('Usuario');
-              },
+              callback: () => null,
             })
           }
+          goHome={() => this.props.navigation.replace('step1Calidad')}
         />
 
         <View style={{flex: 1}}>
           <PDFView
             fadeInDuration={250.0}
             style={{flex: 1}}
-            // resource={`http://api.tekkoperu.com/${folder}/${this.props.route.params.idReport}.pdf`}
-            resource={pdfLink}
+            resource={`http://api.tekkoperu.com/${folder}/${this.props.route.params.idReport}.pdf`}
+            //resource={pdfLink}
             resourceType={'url'}
-            onLoad={() => console.log('PDF rendered from')}
-            onError={error => console.log('Cannot render PDF', error)}
+            onLoad={() => null}
+            onError={error => null}
           />
         </View>
         <Loader isVisible={this.props.loading} />

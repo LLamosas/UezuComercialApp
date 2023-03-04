@@ -23,7 +23,12 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Header from '../../../../components/Header';
 import Title from '../../../../components/Title';
 
-import {camera, gallery, trash} from '../../../../../modules/resources/images';
+import {
+  camera,
+  gallery,
+  trash,
+  close,
+} from '../../../../../modules/resources/images';
 import {styles} from './styles';
 
 const imagePickerOptions = {
@@ -31,6 +36,7 @@ const imagePickerOptions = {
   maxWidth: 600,
   maxHeight: 600,
   includeBase64: true,
+  selectionLimit: 0,
 };
 
 class Step2Calidad extends Component {
@@ -40,6 +46,8 @@ class Step2Calidad extends Component {
     textCausa: '',
     causas: [],
     textObservacion: '',
+    pendientes: '',
+    conclusiones: '',
     observaciones: [],
     arrPhotos: [],
     textInputs: [],
@@ -63,10 +71,14 @@ class Step2Calidad extends Component {
     const imgPickerResponse = response => {
       if (!response.didCancel && !response.error) {
         let arrPhotos = this.state.arrPhotos;
-        arrPhotos.push({
-          photo: response.assets[0].uri,
-          photoData: response.assets[0].base64,
+
+        response.assets.forEach(asset => {
+          arrPhotos.push({
+            photo: asset.uri,
+            photoData: asset.base64,
+          });
         });
+
         this.setState({arrPhotos});
       }
     };
@@ -100,9 +112,7 @@ class Step2Calidad extends Component {
     launchImageLibrary(imagePickerOptions, imgPickerResponse);
   }
 
-  componentDidMount() {
-    console.log('props', this.props.route.params);
-  }
+  componentDidMount() {}
 
   setttingParam(prop, value) {
     this.setState({[prop]: value});
@@ -137,6 +147,8 @@ class Step2Calidad extends Component {
       textObservacion,
       observaciones,
       arrPhotos,
+      pendientes,
+      conclusiones,
     } = this.state;
     return (
       <SafeAreaView style={styles.mainContainer}>
@@ -158,10 +170,33 @@ class Step2Calidad extends Component {
                 </TouchableOpacity>
               </View>
             </View>
-            <Image
-              source={{uri: planoProyecto ? planoProyecto.uri : null}}
-              style={planoProyecto ? styles.image : null}
-            />
+
+            {planoProyecto ? (
+              <View style={styles.image}>
+                <TouchableOpacity
+                  style={{
+                    right: 40,
+                    position: 'absolute',
+                    zIndex: 10,
+                    elevation: 10,
+                  }}
+                  onPress={() => this.setState({planoProyecto: ''})}>
+                  <Image
+                    source={close}
+                    style={{
+                      width: 16,
+                      height: 16,
+                      resizeMode: 'contain',
+                      tintColor: 'red',
+                    }}
+                  />
+                </TouchableOpacity>
+                <Image
+                  source={{uri: planoProyecto ? planoProyecto.uri : null}}
+                  style={planoProyecto ? styles.image : null}
+                />
+              </View>
+            ) : null}
 
             <View style={styles.container}>
               <Text>Imagen de plano de avance proyecto</Text>
@@ -177,10 +212,33 @@ class Step2Calidad extends Component {
                 </TouchableOpacity>
               </View>
             </View>
-            <Image
-              source={{uri: planoAvance ? planoAvance.uri : null}}
-              style={planoAvance ? styles.image : null}
-            />
+
+            {planoAvance ? (
+              <View style={styles.image}>
+                <TouchableOpacity
+                  style={{
+                    right: 40,
+                    position: 'absolute',
+                    zIndex: 10,
+                    elevation: 10,
+                  }}
+                  onPress={() => this.setState({planoAvance: ''})}>
+                  <Image
+                    source={close}
+                    style={{
+                      width: 16,
+                      height: 16,
+                      resizeMode: 'contain',
+                      tintColor: 'red',
+                    }}
+                  />
+                </TouchableOpacity>
+                <Image
+                  source={{uri: planoAvance ? planoAvance.uri : null}}
+                  style={planoAvance ? styles.image : null}
+                />
+              </View>
+            ) : null}
 
             <Text style={generalStyles.textTitle}>
               Causas de atraso en caso diga "Sí"
@@ -257,6 +315,27 @@ class Step2Calidad extends Component {
               </View>
             ))}
 
+            <Text style={generalStyles.textTitle}>
+              Pendientes y restricciones por obra Civil
+            </Text>
+            <TextInput
+              style={[userStyles.textInput, userStyles.textInputArea]}
+              placeholder={'Ingresar texto aquí'}
+              placeholderTextColor="rgb(113, 109, 109)"
+              value={pendientes}
+              multiline
+              onChangeText={text => this.setttingParam('pendientes', text)}
+            />
+            <Text style={generalStyles.textTitle}>Conclusiones</Text>
+            <TextInput
+              style={[userStyles.textInput, userStyles.textInputArea]}
+              placeholder={'Ingresar texto aquí'}
+              placeholderTextColor="rgb(113, 109, 109)"
+              value={conclusiones}
+              multiline
+              onChangeText={text => this.setttingParam('conclusiones', text)}
+            />
+
             <FlatList
               style={{flex: 0, padding: 10}}
               ListHeaderComponent={() => this.renderHeader()}
@@ -264,10 +343,35 @@ class Step2Calidad extends Component {
               numColumns={2}
               renderItem={({item, index}) => {
                 return (
-                  <View style={{flex: 0, alignItems: 'center', margin: 5}}>
+                  <View style={{alignItems: 'center', margin: 5, width: '45%'}}>
+                    <TouchableOpacity
+                      style={{
+                        right: -8,
+                        top: -5,
+                        position: 'absolute',
+                        zIndex: 10,
+                        elevation: 10,
+                      }}
+                      onPress={() => {
+                        let newArrPhotos = this.state.arrPhotos;
+                        newArrPhotos = newArrPhotos.filter(
+                          (_, position) => index !== position,
+                        );
+                        this.setState({arrPhotos: newArrPhotos});
+                      }}>
+                      <Image
+                        source={close}
+                        style={{
+                          width: 16,
+                          height: 16,
+                          resizeMode: 'contain',
+                          tintColor: 'red',
+                        }}
+                      />
+                    </TouchableOpacity>
                     <Image
                       source={{uri: item.photo}}
-                      style={{width: 150, height: 150}}
+                      style={{width: '100%', height: 150, marginTop: 10}}
                     />
                     <TextInput
                       style={styles.textInputFoto}
@@ -291,7 +395,7 @@ class Step2Calidad extends Component {
               onPress={() => {
                 const data = this.props.route.params.beforeData;
                 const beforeData = {...data, ...this.state};
-                this.props.navigation.navigate('step3Calidad', {
+                this.props.navigation.push('step3Calidad', {
                   beforeData,
                 });
               }}>

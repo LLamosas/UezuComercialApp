@@ -15,6 +15,7 @@ import {loginStyles, generalStyles} from '../../../modules/resources/styles';
 
 import {generatePDF} from '../../../modules/core/User/actions';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {close} from '../../../modules/resources/images';
 
 //COMPONENTS
 import Header from '../../components/Header';
@@ -26,6 +27,7 @@ const imagePickerOptions = {
   maxWidth: 600,
   maxHeight: 600,
   includeBase64: true,
+  selectionLimit: 0,
 };
 
 class Foto extends Component {
@@ -47,9 +49,7 @@ class Foto extends Component {
         },
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('Camera permission given');
       } else {
-        console.log('Camera permission denied');
       }
     } catch (err) {
       console.warn(err);
@@ -74,9 +74,11 @@ class Foto extends Component {
     const imgPickerResponse = response => {
       if (!response.didCancel && !response.error) {
         let arrPhotos = this.state.arrPhotos;
-        arrPhotos.push({
-          photo: response.assets[0].uri,
-          photoData: response.assets[0].base64,
+        response.assets.forEach(asset => {
+          arrPhotos.push({
+            photo: asset.uri,
+            photoData: asset.base64,
+          });
         });
         this.setState({arrPhotos});
       }
@@ -186,7 +188,7 @@ class Foto extends Component {
               dniCli: this.props.dniCli,
               cargoCli: this.props.cargoCli,
               callback: idReport => {
-                this.props.navigation.navigate('Viewer', {idReport, from: 'T'});
+                this.props.navigation.push('Viewer', {idReport, from: 'T'});
               },
             });
           }}>
@@ -209,6 +211,31 @@ class Foto extends Component {
             renderItem={({item, index}) => {
               return (
                 <View style={{flex: 1, alignItems: 'center', margin: 5}}>
+                  <TouchableOpacity
+                    style={{
+                      right: -8,
+                      top: -5,
+                      position: 'absolute',
+                      zIndex: 10,
+                      elevation: 10,
+                    }}
+                    onPress={() => {
+                      let newArrPhotos = this.state.arrPhotos;
+                      newArrPhotos = newArrPhotos.filter(
+                        (_, position) => index !== position,
+                      );
+                      this.setState({arrPhotos: newArrPhotos});
+                    }}>
+                    <Image
+                      source={close}
+                      style={{
+                        width: 16,
+                        height: 16,
+                        resizeMode: 'contain',
+                        tintColor: 'red',
+                      }}
+                    />
+                  </TouchableOpacity>
                   <Image
                     source={{uri: item.photo}}
                     style={{width: 150, height: 150}}
@@ -310,7 +337,6 @@ const mapStateProps = state => {
     cargoCli,
   } = state.user;
 
-  console.log('idClienteSelect', idClienteSelect);
   return {
     user,
     token,

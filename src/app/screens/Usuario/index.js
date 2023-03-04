@@ -276,7 +276,7 @@ class Usuario extends Component {
             <TouchableOpacity
               style={loginStyles.button}
               onPress={() => {
-                this.props.navigation.navigate('Equipo');
+                this.props.navigation.push('Equipo');
                 // if(isEmpty (this.props.codSofya) || isEmpty (this.props.ubicacion) ||isEmpty (this.props.fecha) ||isEmpty (this.props.horInicio)  ||isEmpty (this.props.horFin) || this.props.idClienteSelect == 0 ||  this.props.idSupervisorSelect == 0 ){
                 //     showAlert({msj:'Es necesario seleccionar todos los campos',type:2})
                 // }else{

@@ -189,7 +189,7 @@ class Equipo extends Component {
             <TouchableOpacity
               style={loginStyles.button}
               onPress={() => {
-                this.props.navigation.navigate('Generales');
+                this.props.navigation.push('Generales');
 
                 // if (this.props.idMarcaAir != 0 || this.props.idTipoAir != 0 || !isEmpty(this.props.capacidadAir) || !isEmpty(this.props.energiaAir) || !isEmpty(this.props.refrigeranteAir)) {
 

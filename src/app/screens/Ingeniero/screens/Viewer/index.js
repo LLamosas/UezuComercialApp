@@ -18,9 +18,7 @@ class Viewer extends Component {
     selectSupervisor: [{key: '0', value: 0, label: 'Seleccione un Supervisor'}],
   };
 
-  componentDidMount() {
-    console.log('this.props.navigation', this.props.navigation);
-  }
+  componentDidMount() {}
   render() {
     let folder = 'Tecnico';
     const type = this.props.route.params.from;
@@ -51,11 +49,10 @@ class Viewer extends Component {
               token: this.props.token,
               idReport: this.props.route.params.idReport,
               correo,
-              callback: () => {
-                this.props.navigation.navigate('Usuario');
-              },
+              callback: () => null,
             })
           }
+          goHome={() => this.props.navigation.replace('step1Ingeniero')}
         />
 
         <View style={{flex: 1}}>
@@ -65,8 +62,8 @@ class Viewer extends Component {
             // resource={`http://api.tekkoperu.com/${folder}/${this.props.route.params.idReport}.pdf`}
             resource={pdfLink}
             resourceType={'url'}
-            onLoad={() => console.log('PDF rendered from')}
-            onError={error => console.log('Cannot render PDF', error)}
+            onLoad={() => null}
+            onError={error => null}
           />
         </View>
         <Loader isVisible={this.props.loading} />

@@ -460,7 +460,7 @@ class Pruebas extends Component {
             <TouchableOpacity
               style={loginStyles.button}
               onPress={() => {
-                this.props.navigation.navigate('Medicion');
+                this.props.navigation.push('Medicion');
                 // if (
                 //     this.props.compresor1 ==0 ||
                 //     this.props.compresor2 ==0 ||

@@ -115,6 +115,10 @@ export const userStyles = StyleSheet.create({
     color: colors.textInput,
     alignSelf: 'center',
   },
+  textInputArea: {
+    height: 'auto',
+    minHeight: 80,
+  },
 });
 export const pruebasStyles = StyleSheet.create({
   conatiner: {

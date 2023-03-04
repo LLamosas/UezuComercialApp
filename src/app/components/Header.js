@@ -48,12 +48,9 @@ class Header extends Component {
     let url = 'whatsapp://send?text=' + msg + '&phone=' + mobile;
     Linking.openURL(url)
       .then(data => {
-        console.log('WhatsApp Opened', data);
         this.setState({showOptions: false});
       })
-      .catch(() => {
-        console.log('no tienes whatsaoo');
-      });
+      .catch(() => {});
   }
 
   onPressSend(text) {
@@ -115,6 +112,10 @@ class Header extends Component {
   }
   onPressShowOptions() {
     const {option, showOptions} = this.state;
+
+    if (!showOptions) {
+      return null;
+    }
     return (
       <Modal visible={showOptions} animationType="fade" transparent>
         <View
@@ -132,6 +133,19 @@ class Header extends Component {
               borderRadius: 16,
             }}>
             <TouchableOpacity
+              onPress={() => {
+                this.setState({showOptions: false});
+                this.props.goHome();
+                this.setState({showOptions: false});
+              }}
+              style={[
+                loginStyles.button,
+                {position: 'absolute', left: 8, top: 8, marginTop: 0},
+              ]}>
+              <Text style={{color: 'white'}}>Ir a inicio</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
               style={{position: 'absolute', right: 8, top: 8}}
               onPress={() => this.setState({showOptions: false})}>
               <Image
@@ -144,7 +158,7 @@ class Header extends Component {
                 }}
               />
             </TouchableOpacity>
-            <View style={{width: '100%', padding: 8, marginTop: 20}}>
+            <View style={{width: '100%', padding: 8, marginTop: 40}}>
               <View
                 style={{
                   width: '100%',
@@ -240,11 +254,7 @@ class Header extends Component {
               </TouchableOpacity>
             ) : this.props.sendable ? (
               <TouchableOpacity
-                onPress={() =>
-                  this.setState({
-                    showOptions: !this.state.showOptions,
-                  })
-                }>
+                onPress={() => this.setState({showOptions: true})}>
                 <Image
                   source={share}
                   style={[generalStyles.icon, headerStyles.rightIcon]}

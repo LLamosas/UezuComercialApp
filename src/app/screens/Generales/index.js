@@ -153,7 +153,7 @@ class Generales extends Component {
             <TouchableOpacity
               style={loginStyles.button}
               onPress={() => {
-                this.props.navigation.navigate('Pruebas');
+                this.props.navigation.push('Pruebas');
                 // if (this.props.idEquipoGen != 0 || !isEmpty(this.props.modeloGen) || !isEmpty(this.props.serieGen)) {
 
                 //     if (this.props.idEquipoGen == 0 || isEmpty(this.props.modeloGen) || isEmpty(this.props.serieGen)) {

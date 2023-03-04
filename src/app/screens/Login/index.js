@@ -37,9 +37,7 @@ class Login extends Component {
         },
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('Camera permission given');
       } else {
-        console.log('Camera permission denied');
       }
     } catch (err) {
       console.warn(err);
@@ -52,9 +50,6 @@ class Login extends Component {
     }
   }
   render() {
-    if (this.props.token != '') {
-      this.props.navigation.replace('Usuario');
-    }
     return (
       <SafeAreaView style={{flex: 1}}>
         <ImageBackground style={loginStyles.imgBackground} source={bg_login}>
@@ -67,6 +62,8 @@ class Login extends Component {
                 placeholderTextColor="#FFF"
                 value={this.state.user}
                 onChangeText={user => this.setState({user})}
+                autoCapitalize={'none'}
+                autoCorrect={false}
               />
               <TextInput
                 style={loginStyles.textInput}
@@ -83,8 +80,17 @@ class Login extends Component {
                   this.props.userLogin({
                     user: this.state.user,
                     password: this.state.clave,
-                    callback: () => {
+                    callback: user => {
                       this.setState({loader: false});
+                      if (user) {
+                        if (user.fk_idUserType === 6) {
+                          this.props.navigation.replace('UsuarioIngeniero');
+                        } else if (user.fk_idUserType === 4) {
+                          this.props.navigation.replace('UsuarioCalidad');
+                        } else {
+                          this.props.navigation.replace('UsuarioTecnico');
+                        }
+                      }
                     },
                   });
                 }}>

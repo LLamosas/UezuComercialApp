@@ -24,8 +24,14 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 //COMPONENTS
 import Header from '../../../../components/Header';
 import Title from '../../../../components/Title';
+import Loader from '../../../../components/Loader';
 
-import {camera, gallery, trash} from '../../../../../modules/resources/images';
+import {
+  camera,
+  gallery,
+  trash,
+  close,
+} from '../../../../../modules/resources/images';
 import {styles} from './styles';
 
 const imagePickerOptions = {
@@ -33,6 +39,7 @@ const imagePickerOptions = {
   maxWidth: 600,
   maxHeight: 600,
   includeBase64: true,
+  selectionLimit: 0,
 };
 
 class Step2Ingeniero extends Component {
@@ -42,10 +49,13 @@ class Step2Ingeniero extends Component {
     textCausa: '',
     causas: [],
     textObservacion: '',
+    pendientes: '',
+    conclusiones: '',
     observaciones: [],
     arrPhotos: [],
     textInputs: [],
     soporte: '',
+    loader: false,
   };
 
   takePhotoList() {
@@ -66,9 +76,11 @@ class Step2Ingeniero extends Component {
     const imgPickerResponse = response => {
       if (!response.didCancel && !response.error) {
         let arrPhotos = this.state.arrPhotos;
-        arrPhotos.push({
-          photo: response.assets[0].uri,
-          photoData: response.assets[0].base64,
+        response.assets.forEach(asset => {
+          arrPhotos.push({
+            photo: asset.uri,
+            photoData: asset.base64,
+          });
         });
         this.setState({arrPhotos});
       }
@@ -139,195 +151,299 @@ class Step2Ingeniero extends Component {
       observaciones,
       arrPhotos,
       soporte,
+      loader,
+      pendientes,
+      conclusiones,
     } = this.state;
+
     return (
-      <SafeAreaView style={styles.mainContainer}>
-        <ScrollView>
-          <Header backable goBack={() => this.props.navigation.goBack()} />
-          <View style={styles.mainContainer}>
-            <Title title={'Datos datos adicionales'} />
-            <View style={styles.container}>
-              <Text>Imagen de plano proyecto</Text>
-              <View style={styles.iconsContainer}>
-                <TouchableOpacity
-                  style={styles.mrgnIconCamera}
-                  onPress={() => this._takePhoto('planoProyecto')}>
-                  <Image source={camera} style={styles.iconCamera} />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => this._selectPhoto('planoProyecto')}>
-                  <Image source={gallery} style={styles.iconCamera} />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <Image
-              source={{uri: planoProyecto ? planoProyecto.uri : null}}
-              style={planoProyecto ? styles.image : null}
-            />
+      <>
+        <Loader isVisible={loader} />
 
-            <View style={styles.container}>
-              <Text>Imagen de plano proyecto</Text>
-              <View style={styles.iconsContainer}>
-                <TouchableOpacity
-                  style={styles.mrgnIconCamera}
-                  onPress={() => this._takePhoto('planoAvance')}>
-                  <Image source={camera} style={styles.iconCamera} />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => this._selectPhoto('planoAvance')}>
-                  <Image source={gallery} style={styles.iconCamera} />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <Image
-              source={{uri: planoAvance ? planoAvance.uri : null}}
-              style={planoAvance ? styles.image : null}
-            />
-            <Text style={generalStyles.textTitle}>Soporte</Text>
-            <TextInput
-              style={userStyles.textInput}
-              placeholder={'Escriba el soporte en caso de necesitar uno'}
-              placeholderTextColor="rgb(113, 109, 109)"
-              value={soporte}
-              onChangeText={text => this.setttingParam('soporte', text)}
-              returnKeyLabel="Confirmar"
-              returnKeyType="done"
-            />
-
-            <Text style={generalStyles.textTitle}>
-              Causas de atraso en caso diga "Sí"
-            </Text>
-            <TextInput
-              style={userStyles.textInput}
-              placeholder={'Escriba la causa'}
-              placeholderTextColor="rgb(113, 109, 109)"
-              value={textCausa}
-              onChangeText={text => this.setttingParam('textCausa', text)}
-              returnKeyLabel="Confirmar"
-              returnKeyType="done"
-              onSubmitEditing={() => {
-                if (textCausa.length === 0) {
-                  return;
-                }
-                let newCausas = causas;
-                newCausas.push(textCausa);
-                this.setState({textCausa: '', causas: newCausas});
-              }}
-            />
-
-            {causas.map((item, index) => (
+        <SafeAreaView style={styles.mainContainer}>
+          <ScrollView>
+            <Header backable goBack={() => this.props.navigation.goBack()} />
+            <View style={styles.mainContainer}>
+              <Title title={'Datos datos adicionales'} />
               <View style={styles.container}>
-                <Text>{`${index + 1}. ${item}`}</Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    let newCausas = causas;
-                    newCausas = newCausas.filter(
-                      (_, position) => position !== index,
-                    );
-                    this.setState({causas: newCausas});
-                  }}>
-                  <Image source={trash} style={styles.iconCamera} />
-                </TouchableOpacity>
+                <Text>Imagen de plano proyecto</Text>
+                <View style={styles.iconsContainer}>
+                  <TouchableOpacity
+                    style={styles.mrgnIconCamera}
+                    onPress={() => this._takePhoto('planoProyecto')}>
+                    <Image source={camera} style={styles.iconCamera} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => this._selectPhoto('planoProyecto')}>
+                    <Image source={gallery} style={styles.iconCamera} />
+                  </TouchableOpacity>
+                </View>
               </View>
-            ))}
-
-            <Text style={generalStyles.textTitle}>Observaciones</Text>
-            <TextInput
-              style={userStyles.textInput}
-              placeholder={'Escriba su observación'}
-              placeholderTextColor="rgb(113, 109, 109)"
-              value={textObservacion}
-              onChangeText={text => this.setttingParam('textObservacion', text)}
-              returnKeyLabel="Confirmar"
-              returnKeyType="done"
-              onSubmitEditing={() => {
-                if (textObservacion.length === 0) {
-                  return;
-                }
-                let newObseervaciones = observaciones;
-                newObseervaciones.push(textObservacion);
-                this.setState({
-                  textObservacion: '',
-                  observaciones: newObseervaciones,
-                });
-              }}
-            />
-
-            {observaciones.map((item, index) => (
-              <View style={styles.container}>
-                <Text>{`${index + 1}. ${item}`}</Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    let newObseervaciones = observaciones;
-                    newObseervaciones = newObseervaciones.filter(
-                      (_, position) => position !== index,
-                    );
-                    this.setState({observaciones: newObseervaciones});
-                  }}>
-                  <Image source={trash} style={styles.iconCamera} />
-                </TouchableOpacity>
-              </View>
-            ))}
-
-            <FlatList
-              style={{flex: 0, padding: 10}}
-              ListHeaderComponent={() => this.renderHeader()}
-              data={arrPhotos}
-              numColumns={2}
-              renderItem={({item, index}) => {
-                return (
-                  <View style={{flex: 0, alignItems: 'center', margin: 5}}>
+              {planoProyecto ? (
+                <View style={styles.image}>
+                  <TouchableOpacity
+                    style={{
+                      right: 40,
+                      position: 'absolute',
+                      zIndex: 10,
+                      elevation: 10,
+                    }}
+                    onPress={() => this.setState({planoProyecto: ''})}>
                     <Image
-                      source={{uri: item.photo}}
-                      style={{width: 150, height: 150}}
-                    />
-                    <TextInput
-                      style={styles.textInputFoto}
-                      multiline={true}
-                      onChangeText={text => {
-                        let {textInputs} = this.state;
-                        textInputs[index] = text;
-                        this.setState({textInputs});
+                      source={close}
+                      style={{
+                        width: 16,
+                        height: 16,
+                        resizeMode: 'contain',
+                        tintColor: 'red',
                       }}
-                      value={this.state.textInputs[index]}
                     />
-                  </View>
-                );
-              }}
-            />
-          </View>
+                  </TouchableOpacity>
+                  <Image
+                    source={{uri: planoProyecto ? planoProyecto.uri : null}}
+                    style={planoProyecto ? styles.image : null}
+                  />
+                </View>
+              ) : null}
 
-          <View style={styles.btnContainer}>
-            <TouchableOpacity
-              style={loginStyles.button}
-              onPress={() => {
-                const data = this.props.route.params.beforeData;
-                const allData = {...data, ...this.state};
-                this.props.generatePDFIngeniero({
-                  ...allData,
-                  planoProyecto:
-                    planoProyecto && planoProyecto.base64
-                      ? planoProyecto.base64
-                      : null,
-                  planoAvance:
-                    planoAvance && planoAvance.base64
-                      ? planoAvance.base64
-                      : null,
-                  token: this.props.token,
-                  idUser: this.props.user.id,
-                  callback: idReport => {
-                    this.props.navigation.navigate('step3Ingeniero', {
-                      idReport,
-                      from: 'I',
-                    });
-                  },
-                });
-              }}>
-              <Text style={styles.textBtn}>Siguiente</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+              <View style={styles.container}>
+                <Text>Imagen de plano proyecto</Text>
+                <View style={styles.iconsContainer}>
+                  <TouchableOpacity
+                    style={styles.mrgnIconCamera}
+                    onPress={() => this._takePhoto('planoAvance')}>
+                    <Image source={camera} style={styles.iconCamera} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => this._selectPhoto('planoAvance')}>
+                    <Image source={gallery} style={styles.iconCamera} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+              {planoAvance ? (
+                <View style={styles.image}>
+                  <TouchableOpacity
+                    style={{
+                      right: 40,
+                      position: 'absolute',
+                      zIndex: 10,
+                      elevation: 10,
+                    }}
+                    onPress={() => this.setState({planoAvance: ''})}>
+                    <Image
+                      source={close}
+                      style={{
+                        width: 16,
+                        height: 16,
+                        resizeMode: 'contain',
+                        tintColor: 'red',
+                      }}
+                    />
+                  </TouchableOpacity>
+                  <Image
+                    source={{uri: planoAvance ? planoAvance.uri : null}}
+                    style={planoAvance ? styles.image : null}
+                  />
+                </View>
+              ) : null}
+              <Text style={generalStyles.textTitle}>Soporte</Text>
+              <TextInput
+                style={userStyles.textInput}
+                placeholder={'Escriba el soporte en caso de necesitar uno'}
+                placeholderTextColor="rgb(113, 109, 109)"
+                value={soporte}
+                onChangeText={text => this.setttingParam('soporte', text)}
+                returnKeyLabel="Confirmar"
+                returnKeyType="done"
+              />
+
+              <Text style={generalStyles.textTitle}>
+                Causas de atraso en caso diga "Sí"
+              </Text>
+              <TextInput
+                style={userStyles.textInput}
+                placeholder={'Escriba la causa'}
+                placeholderTextColor="rgb(113, 109, 109)"
+                value={textCausa}
+                onChangeText={text => this.setttingParam('textCausa', text)}
+                returnKeyLabel="Confirmar"
+                returnKeyType="done"
+                onSubmitEditing={() => {
+                  if (textCausa.length === 0) {
+                    return;
+                  }
+                  let newCausas = causas;
+                  newCausas.push(textCausa);
+                  this.setState({textCausa: '', causas: newCausas});
+                }}
+              />
+
+              {causas.map((item, index) => (
+                <View style={styles.container}>
+                  <Text>{`${index + 1}. ${item}`}</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      let newCausas = causas;
+                      newCausas = newCausas.filter(
+                        (_, position) => position !== index,
+                      );
+                      this.setState({causas: newCausas});
+                    }}>
+                    <Image source={trash} style={styles.iconCamera} />
+                  </TouchableOpacity>
+                </View>
+              ))}
+
+              <Text style={generalStyles.textTitle}>Observaciones</Text>
+              <TextInput
+                style={userStyles.textInput}
+                placeholder={'Escriba su observación'}
+                placeholderTextColor="rgb(113, 109, 109)"
+                value={textObservacion}
+                onChangeText={text =>
+                  this.setttingParam('textObservacion', text)
+                }
+                returnKeyLabel="Confirmar"
+                returnKeyType="done"
+                onSubmitEditing={() => {
+                  if (textObservacion.length === 0) {
+                    return;
+                  }
+                  let newObseervaciones = observaciones;
+                  newObseervaciones.push(textObservacion);
+                  this.setState({
+                    textObservacion: '',
+                    observaciones: newObseervaciones,
+                  });
+                }}
+              />
+
+              {observaciones.map((item, index) => (
+                <View style={styles.container}>
+                  <Text>{`${index + 1}. ${item}`}</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      let newObseervaciones = observaciones;
+                      newObseervaciones = newObseervaciones.filter(
+                        (_, position) => position !== index,
+                      );
+                      this.setState({observaciones: newObseervaciones});
+                    }}>
+                    <Image source={trash} style={styles.iconCamera} />
+                  </TouchableOpacity>
+                </View>
+              ))}
+
+              <Text style={generalStyles.textTitle}>
+                Pendientes y restricciones por obra Civil
+              </Text>
+              <TextInput
+                style={[userStyles.textInput, userStyles.textInputArea]}
+                placeholder={'Ingresar texto aquí'}
+                placeholderTextColor="rgb(113, 109, 109)"
+                value={pendientes}
+                multiline
+                onChangeText={text => this.setttingParam('pendientes', text)}
+              />
+              <Text style={generalStyles.textTitle}>Conclusiones</Text>
+              <TextInput
+                style={[userStyles.textInput, userStyles.textInputArea]}
+                placeholder={'Ingresar texto aquí'}
+                placeholderTextColor="rgb(113, 109, 109)"
+                value={conclusiones}
+                multiline
+                onChangeText={text => this.setttingParam('conclusiones', text)}
+              />
+
+              <FlatList
+                style={{flex: 0, padding: 10}}
+                ListHeaderComponent={() => this.renderHeader()}
+                data={arrPhotos}
+                numColumns={2}
+                renderItem={({item, index}) => {
+                  return (
+                    <View
+                      style={{alignItems: 'center', margin: 5, width: '45%'}}>
+                      <TouchableOpacity
+                        style={{
+                          right: -8,
+                          top: -5,
+                          position: 'absolute',
+                          zIndex: 10,
+                          elevation: 10,
+                        }}
+                        onPress={() => {
+                          let newArrPhotos = this.state.arrPhotos;
+                          newArrPhotos = newArrPhotos.filter(
+                            (_, position) => index !== position,
+                          );
+                          this.setState({arrPhotos: newArrPhotos});
+                        }}>
+                        <Image
+                          source={close}
+                          style={{
+                            width: 16,
+                            height: 16,
+                            resizeMode: 'contain',
+                            tintColor: 'red',
+                          }}
+                        />
+                      </TouchableOpacity>
+                      <Image
+                        source={{uri: item.photo}}
+                        style={{width: '100%', height: 150, marginTop: 10}}
+                      />
+                      <TextInput
+                        style={styles.textInputFoto}
+                        multiline={true}
+                        onChangeText={text => {
+                          let {textInputs} = this.state;
+                          textInputs[index] = text;
+                          this.setState({textInputs});
+                        }}
+                        value={this.state.textInputs[index]}
+                      />
+                    </View>
+                  );
+                }}
+              />
+            </View>
+
+            <View style={styles.btnContainer}>
+              <TouchableOpacity
+                style={loginStyles.button}
+                onPress={() => {
+                  const data = this.props.route.params.beforeData;
+                  const allData = {...data, ...this.state};
+                  this.setState({loader: true});
+                  this.props.generatePDFIngeniero({
+                    ...allData,
+                    planoProyecto:
+                      planoProyecto && planoProyecto.base64
+                        ? planoProyecto.base64
+                        : null,
+                    planoAvance:
+                      planoAvance && planoAvance.base64
+                        ? planoAvance.base64
+                        : null,
+                    token: this.props.token,
+                    idUser: this.props.user.id,
+                    error: () => this.setState({loader: false}),
+                    callback: idReport => {
+                      this.props.navigation.push('step3Ingeniero', {
+                        idReport,
+                        from: 'I',
+                      });
+                      this.setState({loader: false});
+                    },
+                  });
+                }}>
+                <Text style={styles.textBtn}>Siguiente</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </SafeAreaView>
+      </>
     );
   }
 }

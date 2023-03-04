@@ -66,7 +66,7 @@ export const userLogin = info => {
           payload: {prop: 'token', value: data.data.token},
         });
 
-        callback();
+        callback(data.data.user);
       } else {
         callback();
         showAlert({type: 2, msj: data.data.error});
@@ -148,7 +148,6 @@ export const generatePDF = info => {
     cargoCli,
     callback,
   } = info;
-  console.log('info', info);
 
   return dispatch => {
     dispatch({
@@ -223,7 +222,6 @@ export const generatePDF = info => {
         if (data.status == 200) {
           callback(data.data.idReport);
         } else {
-          console.log('eee', data);
           showAlert({type: 2, msj: data.data.error});
         }
 
@@ -232,7 +230,6 @@ export const generatePDF = info => {
         });
       })
       .catch(e => {
-        console.log('eee', e);
         dispatch({
           type: STOP_WAITING_DATA,
         });
@@ -299,7 +296,7 @@ export const sendReport = info => {
 };
 
 export const generatePDFCalidad = info => {
-  const {callback, token} = info;
+  const {callback, token, error} = info;
   return dispatch => {
     dispatch({
       type: WAITING_DATA,
@@ -313,7 +310,7 @@ export const generatePDFCalidad = info => {
         if (data.status == 200) {
           callback(data.data.idReport);
         } else {
-          console.log('eee', data);
+          error();
           showAlert({type: 2, msj: data.data.error});
         }
 
@@ -322,7 +319,6 @@ export const generatePDFCalidad = info => {
         });
       })
       .catch(e => {
-        console.log('eee', e);
         dispatch({
           type: STOP_WAITING_DATA,
         });
@@ -331,7 +327,7 @@ export const generatePDFCalidad = info => {
 };
 
 export const generatePDFIngeniero = info => {
-  const {callback, token} = info;
+  const {callback, token, error} = info;
   return dispatch => {
     dispatch({
       type: WAITING_DATA,
@@ -345,7 +341,8 @@ export const generatePDFIngeniero = info => {
         if (data.status == 200) {
           callback(data.data.idReport);
         } else {
-          console.log('eee', data);
+          error();
+
           showAlert({type: 2, msj: data.data.error});
         }
 
@@ -354,7 +351,6 @@ export const generatePDFIngeniero = info => {
         });
       })
       .catch(e => {
-        console.log('eee', e);
         dispatch({
           type: STOP_WAITING_DATA,
         });
