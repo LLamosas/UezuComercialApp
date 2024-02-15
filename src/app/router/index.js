@@ -135,6 +135,52 @@ const MainTab = () => {
   );
 };
 
+const OperacionesTab = () => {
+  return (
+    <Tab.Navigator
+      initialRouteName="Inicio"
+      screenOptions={{headerShown: false}}>
+      <Tab.Screen
+        name="Inicio"
+        component={InicioStack}
+        options={{
+          tabBarIcon: ({size, color}) => (
+            <Image
+              source={tecnico}
+              style={{
+                width: size,
+                height: size,
+                resizeMode: 'contain',
+                tintColor: color,
+              }}
+            />
+          ),
+          tabBarLabel: 'Técnico',
+          tabBarActiveTintColor: '#0B509C',
+        }}
+      />
+      <Tab.Screen
+        name="Ingeniero"
+        component={IngenieroStack}
+        options={{
+          tabBarIcon: ({size, color}) => (
+            <Image
+              source={ingeniero}
+              style={{
+                width: size,
+                height: size,
+                resizeMode: 'contain',
+                tintColor: color,
+              }}
+            />
+          ),
+          tabBarActiveTintColor: '#0B509C',
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
+
 function RootNavigator() {
   return (
     <Navigator
@@ -145,7 +191,7 @@ function RootNavigator() {
       <Screen name={'Usuario'} component={MainTab} />
       <Screen name={'UsuarioCalidad'} component={CalidadStack} />
       <Screen name={'UsuarioIngeniero'} component={IngenieroStack} />
-      <Screen name={'UsuarioTecnico'} component={InicioStack} />
+      <Screen name={'UsuarioTecnico'} component={OperacionesTab} />
     </Navigator>
   );
 }
